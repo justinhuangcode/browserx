@@ -104,38 +104,75 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # Publish to crates.io
+  # Publish to crates.io (requires CARGO_REGISTRY_TOKEN secret)
   crates-io:
     name: Publish to crates.io
     needs: release
     runs-on: ubuntu-latest
+    # Optional: don't block the release if crates.io publish fails
+    continue-on-error: true
     steps:
+      - name: Check for crates.io token
+        env:
+          HAS_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN != '' }}
+        run: |
+          if [ "$HAS_TOKEN" != "true" ]; then
+            echo "::warning::CARGO_REGISTRY_TOKEN not configured — skipping crates.io publish"
+            echo "SKIP_PUBLISH=true" >> "$GITHUB_ENV"
+          fi
+
       - uses: actions/checkout@v4
+        if: env.SKIP_PUBLISH != 'true'
       - uses: dtolnay/rust-toolchain@stable
+        if: env.SKIP_PUBLISH != 'true'
 
       # Publish in dependency order: core -> vault -> cli
       - name: Publish browserx-core
-        run: cargo publish -p browserx-core --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        if: env.SKIP_PUBLISH != 'true'
+        run: cargo publish -p browserx-core
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
 
       - name: Wait for crates.io index
+        if: env.SKIP_PUBLISH != 'true'
         run: sleep 30
 
       - name: Publish browserx-vault
-        run: cargo publish -p browserx-vault --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        if: env.SKIP_PUBLISH != 'true'
+        run: cargo publish -p browserx-vault
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
 
       - name: Wait for crates.io index
+        if: env.SKIP_PUBLISH != 'true'
         run: sleep 30
 
       - name: Publish browserx (CLI)
-        run: cargo publish -p browserx --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        if: env.SKIP_PUBLISH != 'true'
+        run: cargo publish -p browserx
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
 
-  # Update Homebrew tap
+  # Update Homebrew tap (requires HOMEBREW_TAP_TOKEN secret)
   homebrew:
     name: Update Homebrew tap
     needs: release
     runs-on: ubuntu-latest
+    # Optional: don't block the release if Homebrew update fails
+    continue-on-error: true
     steps:
+      - name: Check for Homebrew token
+        id: check
+        env:
+          HAS_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN != '' }}
+        run: |
+          if [ "$HAS_TOKEN" != "true" ]; then
+            echo "::warning::HOMEBREW_TAP_TOKEN not configured — skipping Homebrew tap update"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Update Homebrew formula
+        if: steps.check.outputs.skip != 'true'
         uses: mislav/bump-homebrew-formula-action@v3
         with:
           formula-name: browserx

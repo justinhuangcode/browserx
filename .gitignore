@@ -1,0 +1,22 @@
+# Build
+/target
+**/*.rs.bk
+
+# Editor
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets (never commit)
+.env
+*.pem
+*.key
+
+# Vault data (user-specific)
+.browserx/

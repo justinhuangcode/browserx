@@ -1,0 +1,24 @@
+[package]
+name = "browserx"
+description = "Extract browser cookies from any browser -- CLI + library for AI agents and automation"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[[bin]]
+name = "browserx"
+path = "src/main.rs"
+
+[dependencies]
+browserx-core = { workspace = true }
+browserx-vault = { workspace = true }
+clap = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+chrono = { workspace = true }

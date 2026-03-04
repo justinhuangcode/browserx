@@ -4,6 +4,13 @@ use crate::error::{BrowserExError, Result};
 use crate::providers::CookieProvider;
 use crate::types::{BrowserName, GetCookiesResult};
 
+#[cfg(target_os = "macos")]
+use crate::types::{Cookie, CookieSource, SecretValue};
+#[cfg(target_os = "macos")]
+use crate::util::epoch;
+#[cfg(target_os = "macos")]
+use tracing::debug;
+
 #[derive(Default)]
 pub struct SafariProvider;
 

@@ -12,7 +12,9 @@
 [![Issues](https://img.shields.io/github/issues/justinhuangcode/browserx?style=flat-square)](https://github.com/justinhuangcode/browserx/issues)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey?style=flat-square)](https://github.com/justinhuangcode/browserx)
 
-Extract cookies from any browser on any platform. A single Rust binary that reads cookie databases from 9 browsers across macOS, Linux, and Windows, decrypts encrypted values using native OS APIs, and outputs in 5 formats. Designed for AI agents, CLI automation, and programmatic authenticated web access.
+A cross-platform browser cookie extraction CLI for session replay, authentication, and automation. 🍪
+
+A single Rust binary that reads cookie databases from 9 browsers across macOS, Linux, and Windows, decrypts encrypted values using native OS APIs, and outputs in 5 formats. Designed for AI agents, CLI automation, and programmatic authenticated web access.
 
 ## Why BrowserX?
 

@@ -39,7 +39,7 @@ struct Cli {
 #[derive(clap::Subcommand)]
 enum Commands {
     /// Extract cookies from browser(s)
-    Get(commands::get::GetArgs),
+    Get(Box<commands::get::GetArgs>),
 
     /// List detected browsers and profiles
     Browsers(commands::browsers::BrowsersArgs),
@@ -73,7 +73,7 @@ fn main() -> Result<()> {
     let format = cli.format.as_deref().unwrap_or("json");
 
     match cli.command {
-        Commands::Get(args) => commands::get::run(args, format, cli.quiet),
+        Commands::Get(args) => commands::get::run(*args, format, cli.quiet),
         Commands::Browsers(args) => commands::browsers::run(args, format),
         Commands::Health(args) => commands::health::run(args, format),
         Commands::Vault(args) => commands::vault::run(args, format),

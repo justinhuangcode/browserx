@@ -4,6 +4,7 @@ use crate::error::{BrowserExError, Result};
 use crate::providers::CookieProvider;
 use crate::types::{BrowserName, GetCookiesResult};
 
+#[derive(Default)]
 pub struct SafariProvider;
 
 impl SafariProvider {
@@ -37,10 +38,10 @@ impl CookieProvider for SafariProvider {
         #[cfg(not(target_os = "macos"))]
         {
             let _ = (hosts, names, include_expired);
-            return Err(BrowserExError::PlatformNotSupported {
+            Err(BrowserExError::PlatformNotSupported {
                 operation: "Safari cookie extraction".into(),
                 platform: std::env::consts::OS.into(),
-            });
+            })
         }
 
         #[cfg(target_os = "macos")]

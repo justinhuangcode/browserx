@@ -1,9 +1,9 @@
-/// Epoch conversion utilities for browser cookie timestamps.
-///
-/// Different browsers use different epoch bases:
-/// - **Chromium**: Microseconds since 1601-01-01 (Windows FILETIME)
-/// - **Firefox**: Unix epoch seconds
-/// - **Safari**: Seconds since 2001-01-01 (Mac absolute time)
+//! Epoch conversion utilities for browser cookie timestamps.
+//!
+//! Different browsers use different epoch bases:
+//! - **Chromium**: Microseconds since 1601-01-01 (Windows FILETIME)
+//! - **Firefox**: Unix epoch seconds
+//! - **Safari**: Seconds since 2001-01-01 (Mac absolute time)
 
 /// Delta between Windows FILETIME epoch (1601) and Unix epoch (1970) in seconds.
 const WINDOWS_EPOCH_DELTA_SECS: i64 = 11_644_473_600;
@@ -33,7 +33,7 @@ pub fn chromium_to_unix(chromium_us: i64) -> Option<i64> {
     let unix_secs = chromium_us / 1_000_000 - WINDOWS_EPOCH_DELTA_SECS;
 
     // Sanity check: should be a reasonable date (after 2000, before 2100)
-    if unix_secs < 946_684_800 || unix_secs > 4_102_444_800 {
+    if !(946_684_800..=4_102_444_800).contains(&unix_secs) {
         return None;
     }
 
@@ -51,7 +51,7 @@ pub fn safari_to_unix(mac_time: f64) -> Option<i64> {
 
     let unix_secs = mac_time as i64 + MAC_EPOCH_DELTA_SECS;
 
-    if unix_secs < 946_684_800 || unix_secs > 4_102_444_800 {
+    if !(946_684_800..=4_102_444_800).contains(&unix_secs) {
         return None;
     }
 

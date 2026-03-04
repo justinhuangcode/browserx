@@ -6,6 +6,7 @@ use crate::providers::CookieProvider;
 use crate::types::{BrowserName, Cookie, CookieSource, GetCookiesResult, SameSite, SecretValue};
 use crate::util::{epoch, host_match};
 
+#[derive(Default)]
 pub struct FirefoxProvider;
 
 impl FirefoxProvider {

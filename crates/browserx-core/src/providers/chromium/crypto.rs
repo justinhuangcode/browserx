@@ -39,9 +39,11 @@ pub fn get_decryption_key(config: &ChromiumConfig, _timeout_ms: u64) -> Result<V
 fn get_key_macos(config: &ChromiumConfig) -> Result<Vec<u8>> {
     use security_framework::passwords::get_generic_password;
 
-    let password = get_generic_password(config.keychain_service, config.keychain_account)
-        .map_err(|e| BrowserExError::KeychainAccess {
-            reason: format!("{}: {e}", config.browser.display_name()),
+    let password =
+        get_generic_password(config.keychain_service, config.keychain_account).map_err(|e| {
+            BrowserExError::KeychainAccess {
+                reason: format!("{}: {e}", config.browser.display_name()),
+            }
         })?;
 
     derive_aes128_key(&password, 1003)
@@ -69,11 +71,7 @@ fn get_key_linux(config: &ChromiumConfig) -> Result<Vec<u8>> {
 fn try_linux_keyring(config: &ChromiumConfig) -> Result<String> {
     // Try GNOME keyring via secret-tool
     let output = std::process::Command::new("secret-tool")
-        .args([
-            "lookup",
-            "application",
-            config.linux_keyring_app,
-        ])
+        .args(["lookup", "application", config.linux_keyring_app])
         .output()
         .map_err(|e| BrowserExError::KeychainAccess {
             reason: format!("secret-tool not found: {e}"),
@@ -95,16 +93,15 @@ fn try_linux_keyring(config: &ChromiumConfig) -> Result<String> {
 
 #[cfg(target_os = "windows")]
 fn get_key_windows(config: &ChromiumConfig) -> Result<Vec<u8>> {
-    use base64::Engine;
     use crate::providers::chromium::paths;
+    use base64::Engine;
 
     // Read Local State JSON
     let local_state_path = paths::local_state_path(config.browser)?;
-    let local_state_str = std::fs::read_to_string(&local_state_path).map_err(|e| {
-        BrowserExError::KeychainAccess {
+    let local_state_str =
+        std::fs::read_to_string(&local_state_path).map_err(|e| BrowserExError::KeychainAccess {
             reason: format!("cannot read Local State: {e}"),
-        }
-    })?;
+        })?;
 
     let local_state: serde_json::Value =
         serde_json::from_str(&local_state_str).map_err(|e| BrowserExError::KeychainAccess {
@@ -139,10 +136,8 @@ fn get_key_windows(config: &ChromiumConfig) -> Result<Vec<u8>> {
 
 #[cfg(target_os = "windows")]
 fn dpapi_unprotect(data: &[u8]) -> Result<Vec<u8>> {
-    use windows_sys::Win32::Security::Cryptography::{
-        CryptUnprotectData, CRYPT_INTEGER_BLOB,
-    };
     use windows_sys::Win32::Foundation::LocalFree;
+    use windows_sys::Win32::Security::Cryptography::{CryptUnprotectData, CRYPT_INTEGER_BLOB};
 
     unsafe {
         let mut blob_in = CRYPT_INTEGER_BLOB {
@@ -172,8 +167,7 @@ fn dpapi_unprotect(data: &[u8]) -> Result<Vec<u8>> {
             });
         }
 
-        let result =
-            std::slice::from_raw_parts(blob_out.pbData, blob_out.cbData as usize).to_vec();
+        let result = std::slice::from_raw_parts(blob_out.pbData, blob_out.cbData as usize).to_vec();
 
         LocalFree(blob_out.pbData as _);
 

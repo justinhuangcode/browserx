@@ -43,9 +43,8 @@ pub mod util;
 
 // Re-export public API at crate root
 pub use types::{
-    BrowserInfo, BrowserName, Cookie, CookieHealth, CookieSource, CookieStatus,
-    GetCookiesOptions, GetCookiesResult, HealthStatus, MergeMode, SameSite,
-    SecretValue, SessionHealth,
+    BrowserInfo, BrowserName, Cookie, CookieHealth, CookieSource, CookieStatus, GetCookiesOptions,
+    GetCookiesResult, HealthStatus, MergeMode, SameSite, SecretValue, SessionHealth,
 };
 
 use std::collections::HashSet;
@@ -190,16 +189,25 @@ pub fn check_health(cookies: &[Cookie], url: &str) -> SessionHealth {
             None => (CookieStatus::Session, None),
             Some(exp) if exp < now => {
                 expired += 1;
-                (CookieStatus::Expired, Some(util::epoch::expires_in_human(exp)))
+                (
+                    CookieStatus::Expired,
+                    Some(util::epoch::expires_in_human(exp)),
+                )
             }
             Some(exp) if exp < now + one_hour => {
                 expiring_soon += 1;
                 active += 1;
-                (CookieStatus::ExpiringSoon, Some(util::epoch::expires_in_human(exp)))
+                (
+                    CookieStatus::ExpiringSoon,
+                    Some(util::epoch::expires_in_human(exp)),
+                )
             }
             Some(exp) => {
                 active += 1;
-                (CookieStatus::Active, Some(util::epoch::expires_in_human(exp)))
+                (
+                    CookieStatus::Active,
+                    Some(util::epoch::expires_in_human(exp)),
+                )
             }
         };
 

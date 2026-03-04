@@ -3,9 +3,7 @@ use tracing::debug;
 
 use crate::error::{BrowserExError, Result};
 use crate::providers::CookieProvider;
-use crate::types::{
-    BrowserName, Cookie, CookieSource, GetCookiesResult, SameSite, SecretValue,
-};
+use crate::types::{BrowserName, Cookie, CookieSource, GetCookiesResult, SameSite, SecretValue};
 use crate::util::{epoch, host_match};
 
 pub struct FirefoxProvider;
@@ -62,10 +60,7 @@ impl FirefoxProvider {
 
         // Auto-detect: prefer "default-release", then any "*.default*"
         if let Ok(entries) = std::fs::read_dir(&profiles_dir) {
-            let mut candidates: Vec<_> = entries
-                .flatten()
-                .filter(|e| e.path().is_dir())
-                .collect();
+            let mut candidates: Vec<_> = entries.flatten().filter(|e| e.path().is_dir()).collect();
 
             // Sort by preference
             candidates.sort_by_key(|e| {
@@ -97,9 +92,7 @@ impl CookieProvider for FirefoxProvider {
     }
 
     fn is_available(&self) -> bool {
-        Self::profiles_dir()
-            .map(|p| p.exists())
-            .unwrap_or(false)
+        Self::profiles_dir().map(|p| p.exists()).unwrap_or(false)
     }
 
     fn extract(
@@ -126,7 +119,10 @@ impl CookieProvider for FirefoxProvider {
             hosts,
             names,
             include_expired,
-            &profile_dir.file_name().unwrap_or_default().to_string_lossy(),
+            &profile_dir
+                .file_name()
+                .unwrap_or_default()
+                .to_string_lossy(),
         )
     }
 }

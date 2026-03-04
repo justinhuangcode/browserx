@@ -5,7 +5,8 @@ use crate::types::BrowserName;
 
 /// Get the user data directory for a Chromium-based browser.
 pub fn user_data_dir(browser: BrowserName) -> Result<PathBuf> {
-    let home = dirs::home_dir().ok_or_else(|| BrowserExError::Other("cannot determine home directory".into()))?;
+    let home = dirs::home_dir()
+        .ok_or_else(|| BrowserExError::Other("cannot determine home directory".into()))?;
 
     #[cfg(target_os = "macos")]
     let base = home.join("Library/Application Support");
@@ -20,59 +21,101 @@ pub fn user_data_dir(browser: BrowserName) -> Result<PathBuf> {
     let subdir = match browser {
         BrowserName::Chrome => {
             #[cfg(target_os = "macos")]
-            { "Google/Chrome" }
+            {
+                "Google/Chrome"
+            }
             #[cfg(target_os = "linux")]
-            { "google-chrome" }
+            {
+                "google-chrome"
+            }
             #[cfg(target_os = "windows")]
-            { "Google/Chrome/User Data" }
+            {
+                "Google/Chrome/User Data"
+            }
         }
         BrowserName::Edge => {
             #[cfg(target_os = "macos")]
-            { "Microsoft Edge" }
+            {
+                "Microsoft Edge"
+            }
             #[cfg(target_os = "linux")]
-            { "microsoft-edge" }
+            {
+                "microsoft-edge"
+            }
             #[cfg(target_os = "windows")]
-            { "Microsoft/Edge/User Data" }
+            {
+                "Microsoft/Edge/User Data"
+            }
         }
         BrowserName::Brave => {
             #[cfg(target_os = "macos")]
-            { "BraveSoftware/Brave-Browser" }
+            {
+                "BraveSoftware/Brave-Browser"
+            }
             #[cfg(target_os = "linux")]
-            { "BraveSoftware/Brave-Browser" }
+            {
+                "BraveSoftware/Brave-Browser"
+            }
             #[cfg(target_os = "windows")]
-            { "BraveSoftware/Brave-Browser/User Data" }
+            {
+                "BraveSoftware/Brave-Browser/User Data"
+            }
         }
         BrowserName::Arc => {
             #[cfg(target_os = "macos")]
-            { "Arc/User Data" }
+            {
+                "Arc/User Data"
+            }
             #[cfg(target_os = "linux")]
-            { "arc" }
+            {
+                "arc"
+            }
             #[cfg(target_os = "windows")]
-            { "Arc/User Data" }
+            {
+                "Arc/User Data"
+            }
         }
         BrowserName::Vivaldi => {
             #[cfg(target_os = "macos")]
-            { "Vivaldi" }
+            {
+                "Vivaldi"
+            }
             #[cfg(target_os = "linux")]
-            { "vivaldi" }
+            {
+                "vivaldi"
+            }
             #[cfg(target_os = "windows")]
-            { "Vivaldi/User Data" }
+            {
+                "Vivaldi/User Data"
+            }
         }
         BrowserName::Opera => {
             #[cfg(target_os = "macos")]
-            { "com.operasoftware.Opera" }
+            {
+                "com.operasoftware.Opera"
+            }
             #[cfg(target_os = "linux")]
-            { "opera" }
+            {
+                "opera"
+            }
             #[cfg(target_os = "windows")]
-            { "Opera Software/Opera Stable" }
+            {
+                "Opera Software/Opera Stable"
+            }
         }
         BrowserName::Chromium => {
             #[cfg(target_os = "macos")]
-            { "Chromium" }
+            {
+                "Chromium"
+            }
             #[cfg(target_os = "linux")]
-            { "chromium" }
+            {
+                "chromium"
+            }
             #[cfg(target_os = "windows")]
-            { "Chromium/User Data" }
+            {
+                "Chromium/User Data"
+            }
         }
         _ => {
             return Err(BrowserExError::Other(format!(

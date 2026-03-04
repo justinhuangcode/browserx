@@ -117,9 +117,9 @@ fn parse_binary_cookies(
                 for c in page_cookies {
                     // Host filter
                     if !hosts.is_empty() {
-                        let matches = hosts.iter().any(|h| {
-                            crate::util::host_match::domain_matches(&c.domain, h)
-                        });
+                        let matches = hosts
+                            .iter()
+                            .any(|h| crate::util::host_match::domain_matches(&c.domain, h));
                         if !matches {
                             continue;
                         }
@@ -162,8 +162,7 @@ fn parse_safari_page(page: &[u8]) -> Result<Vec<Cookie>> {
     }
 
     // Page header: first 4 bytes should be 0x00000100
-    let cookie_count =
-        u32::from_le_bytes([page[4], page[5], page[6], page[7]]) as usize;
+    let cookie_count = u32::from_le_bytes([page[4], page[5], page[6], page[7]]) as usize;
 
     // Read cookie offsets
     let mut offsets = Vec::with_capacity(cookie_count);
@@ -172,12 +171,9 @@ fn parse_safari_page(page: &[u8]) -> Result<Vec<Cookie>> {
         if base + 4 > page.len() {
             break;
         }
-        let offset = u32::from_le_bytes([
-            page[base],
-            page[base + 1],
-            page[base + 2],
-            page[base + 3],
-        ]) as usize;
+        let offset =
+            u32::from_le_bytes([page[base], page[base + 1], page[base + 2], page[base + 3]])
+                as usize;
         offsets.push(offset);
     }
 
@@ -221,10 +217,8 @@ fn parse_safari_cookie_record(record: &[u8]) -> Option<Cookie> {
     let flags = u32::from_le_bytes([record[8], record[9], record[10], record[11]]);
 
     let url_offset = u32::from_le_bytes([record[16], record[17], record[18], record[19]]) as usize;
-    let name_offset =
-        u32::from_le_bytes([record[20], record[21], record[22], record[23]]) as usize;
-    let path_offset =
-        u32::from_le_bytes([record[24], record[25], record[26], record[27]]) as usize;
+    let name_offset = u32::from_le_bytes([record[20], record[21], record[22], record[23]]) as usize;
+    let path_offset = u32::from_le_bytes([record[24], record[25], record[26], record[27]]) as usize;
     let value_offset =
         u32::from_le_bytes([record[28], record[29], record[30], record[31]]) as usize;
 

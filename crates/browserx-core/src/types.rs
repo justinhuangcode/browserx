@@ -183,7 +183,9 @@ impl std::str::FromStr for MergeMode {
         match s.to_lowercase().as_str() {
             "merge" => Ok(Self::Merge),
             "first" => Ok(Self::First),
-            _ => Err(format!("unknown merge mode: {s} (expected 'merge' or 'first')")),
+            _ => Err(format!(
+                "unknown merge mode: {s} (expected 'merge' or 'first')"
+            )),
         }
     }
 }
@@ -386,10 +388,19 @@ mod tests {
 
     #[test]
     fn browser_name_from_str() {
-        assert_eq!("chrome".parse::<BrowserName>().unwrap(), BrowserName::Chrome);
+        assert_eq!(
+            "chrome".parse::<BrowserName>().unwrap(),
+            BrowserName::Chrome
+        );
         assert_eq!("edge".parse::<BrowserName>().unwrap(), BrowserName::Edge);
-        assert_eq!("firefox".parse::<BrowserName>().unwrap(), BrowserName::Firefox);
-        assert_eq!("safari".parse::<BrowserName>().unwrap(), BrowserName::Safari);
+        assert_eq!(
+            "firefox".parse::<BrowserName>().unwrap(),
+            BrowserName::Firefox
+        );
+        assert_eq!(
+            "safari".parse::<BrowserName>().unwrap(),
+            BrowserName::Safari
+        );
         assert_eq!("brave".parse::<BrowserName>().unwrap(), BrowserName::Brave);
         assert_eq!("arc".parse::<BrowserName>().unwrap(), BrowserName::Arc);
         assert!("unknown".parse::<BrowserName>().is_err());

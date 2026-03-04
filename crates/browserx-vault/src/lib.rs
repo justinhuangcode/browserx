@@ -85,7 +85,10 @@ impl Vault {
         let key_bytes = base64::engine::general_purpose::STANDARD.decode(key_b64.trim())?;
         let mut key = [0u8; 32];
         if key_bytes.len() != 32 {
-            anyhow::bail!("invalid master key length: expected 32, got {}", key_bytes.len());
+            anyhow::bail!(
+                "invalid master key length: expected 32, got {}",
+                key_bytes.len()
+            );
         }
         key.copy_from_slice(&key_bytes);
         Ok(key)
@@ -178,7 +181,12 @@ impl Vault {
         data.entries.insert(url.to_string(), record);
         self.save_data(&data)?;
 
-        debug!("stored {} cookies for {} (expires: {})", cookies.len(), url, expires_at);
+        debug!(
+            "stored {} cookies for {} (expires: {})",
+            cookies.len(),
+            url,
+            expires_at
+        );
         Ok(())
     }
 

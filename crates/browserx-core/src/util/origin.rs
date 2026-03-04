@@ -91,9 +91,6 @@ mod tests {
         ];
         let hosts = normalize_origins(&urls).unwrap();
         // "google.com" should appear only once
-        assert_eq!(
-            hosts.iter().filter(|h| *h == "google.com").count(),
-            1
-        );
+        assert_eq!(hosts.iter().filter(|h| *h == "google.com").count(), 1);
     }
 }

@@ -3,9 +3,7 @@ use tracing::debug;
 
 use crate::error::Result;
 use crate::providers::chromium::crypto;
-use crate::types::{
-    BrowserName, Cookie, CookieSource, GetCookiesResult, SameSite, SecretValue,
-};
+use crate::types::{BrowserName, Cookie, CookieSource, GetCookiesResult, SameSite, SecretValue};
 use crate::util::{epoch, host_match};
 
 /// Query cookies from a Chromium SQLite database.
@@ -58,7 +56,10 @@ pub fn query_cookies(
     } else {
         let now = chrono::Utc::now().timestamp();
         // expires_utc = 0 means session cookie (always include)
-        format!(" AND (expires_utc = 0 OR expires_utc > {})", now * 1_000_000 + WINDOWS_EPOCH_DELTA_US)
+        format!(
+            " AND (expires_utc = 0 OR expires_utc > {})",
+            now * 1_000_000 + WINDOWS_EPOCH_DELTA_US
+        )
     };
 
     let sql = format!(

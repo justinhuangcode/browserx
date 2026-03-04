@@ -68,11 +68,10 @@ pub fn try_inline(
             .map_err(|e| BrowserExError::InvalidInlinePayload {
                 reason: format!("base64 decode failed: {e}"),
             })?;
-        let json_str = String::from_utf8(decoded).map_err(|e| {
-            BrowserExError::InvalidInlinePayload {
+        let json_str =
+            String::from_utf8(decoded).map_err(|e| BrowserExError::InvalidInlinePayload {
                 reason: format!("base64 payload is not valid UTF-8: {e}"),
-            }
-        })?;
+            })?;
         let result = parse_inline_json(&json_str, hosts, names)?;
         if !result.cookies.is_empty() {
             return Ok(Some(result));
@@ -85,15 +84,15 @@ pub fn try_inline(
         let path = Path::new(file_path);
         if !path.exists() {
             warn!("inline file not found: {}", file_path);
-            return Ok(Some(GetCookiesResult::empty().with_warning(format!(
-                "inline file not found: {file_path}"
-            ))));
+            return Ok(Some(
+                GetCookiesResult::empty()
+                    .with_warning(format!("inline file not found: {file_path}")),
+            ));
         }
-        let json_str = std::fs::read_to_string(path).map_err(|e| {
-            BrowserExError::InvalidInlinePayload {
+        let json_str =
+            std::fs::read_to_string(path).map_err(|e| BrowserExError::InvalidInlinePayload {
                 reason: format!("failed to read file '{file_path}': {e}"),
-            }
-        })?;
+            })?;
         let result = parse_inline_json(&json_str, hosts, names)?;
         if !result.cookies.is_empty() {
             return Ok(Some(result));
@@ -134,12 +133,15 @@ fn parse_inline_json(
             continue;
         }
 
-        let same_site = c.same_site.as_deref().and_then(|s| match s.to_lowercase().as_str() {
-            "strict" => Some(crate::types::SameSite::Strict),
-            "lax" => Some(crate::types::SameSite::Lax),
-            "none" => Some(crate::types::SameSite::None),
-            _ => None,
-        });
+        let same_site = c
+            .same_site
+            .as_deref()
+            .and_then(|s| match s.to_lowercase().as_str() {
+                "strict" => Some(crate::types::SameSite::Strict),
+                "lax" => Some(crate::types::SameSite::Lax),
+                "none" => Some(crate::types::SameSite::None),
+                _ => None,
+            });
 
         let expires = c.expires.and_then(|e| {
             if e <= 0.0 {

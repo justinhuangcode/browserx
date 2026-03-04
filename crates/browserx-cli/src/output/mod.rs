@@ -83,11 +83,7 @@ fn render_netscape(cookies: &[Cookie]) -> Result<()> {
 /// Usage: `eval $(browserx get --url https://x.com --format env)`
 fn render_env(cookies: &[Cookie]) -> Result<()> {
     for c in cookies {
-        let var_name = c
-            .name
-            .to_uppercase()
-            .replace('-', "_")
-            .replace('.', "_");
+        let var_name = c.name.to_uppercase().replace('-', "_").replace('.', "_");
         // Shell-safe value: escape single quotes
         let safe_value = c.value.expose().replace('\'', "'\\''");
         println!("export COOKIE_{var_name}='{safe_value}'");

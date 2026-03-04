@@ -51,19 +51,13 @@ pub fn run(args: HealthArgs, format: &str) -> Result<()> {
             println!("{} {} -- {}", status_indicator, health.url, health.status);
             println!(
                 "  Cookies: {} total, {} active, {} expiring soon, {} expired",
-                health.total_cookies,
-                health.active_cookies,
-                health.expiring_soon,
-                health.expired
+                health.total_cookies, health.active_cookies, health.expiring_soon, health.expired
             );
 
             if !health.details.is_empty() {
                 println!();
                 for detail in &health.details {
-                    let expires = detail
-                        .expires_in
-                        .as_deref()
-                        .unwrap_or("session");
+                    let expires = detail.expires_in.as_deref().unwrap_or("session");
                     println!(
                         "  {:20} {:15} {:?} ({})",
                         detail.name, detail.domain, detail.status, expires
